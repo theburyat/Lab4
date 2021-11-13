@@ -22,25 +22,24 @@ import java.lang.Thread.sleep
 @RunWith(AndroidJUnit4::class)
 class NavigationTest {
 
-    fun checkAbout() {
+    private fun checkAbout() {
         openAbout()
         onView(withId(R.id.activity_about)).check(matches(isDisplayed()))
     }
 
-    fun exitAboutWithBack(fragment: Int) {
+    private fun exitAboutWithBack(fragment: Int) {
         pressBack()
         onView(withId(fragment)).check(matches(isDisplayed()))
     }
 
-    fun exitAboutWithUp(fragment: Int) {
+    private fun exitAboutWithUp(fragment: Int) {
         onView(withContentDescription(R.string.nav_app_bar_navigate_up_description))
             .perform(click())
         onView(withId(fragment)).check(matches(isDisplayed()))
     }
 
-    fun jump(fragmentFrom: Int, fragmentTo: Int) {
-        val pair = fragmentFrom to fragmentTo
-        when (pair) {
+    private fun jump(fragmentFrom: Int, fragmentTo: Int) {
+        when (fragmentFrom to fragmentTo) {
             1 to 2 -> {
                 onView(withId(R.id.bnToSecond)).perform(click())
             }
@@ -63,13 +62,12 @@ class NavigationTest {
         }
     }
 
-    fun testJump(fragmentFrom: Int, fragmentTo: Int) {
-        var x = 0
-        when (fragmentTo) {
-            1 -> x = R.id.fragment1
-            2 -> x = R.id.fragment2
-            3 -> x = R.id.fragment3
-            else -> throw Exception("Bad fragment to jump");
+    private fun testJump(fragmentFrom: Int, fragmentTo: Int) {
+        val x = when (fragmentTo) {
+            1 -> R.id.fragment1
+            2 -> R.id.fragment2
+            3 -> R.id.fragment3
+            else -> throw Exception("Bad fragment to jump")
         }
         jump(fragmentFrom, fragmentTo)
         onView(withId(x)).check(matches(isDisplayed()))
@@ -84,7 +82,7 @@ class NavigationTest {
     @Test
     fun testCorrectJumps() {
         launchActivity<MainActivity>()
-        //check that 1 fragment is view whem open app
+        //check that 1 fragment is view when open app
         onView(withId(R.id.fragment1)).check(matches(isDisplayed()))
         // jump from 1 to 2 fragment
         testJump(1, 2)
@@ -106,35 +104,35 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         repeat(2) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         repeat(3) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         jump(2, 3)
         repeat(3) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         jump(2, 1)
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         jump(3, 2)
         repeat(2) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         jump(3, 1)
         pressBackUnconditionally()
@@ -148,40 +146,40 @@ class NavigationTest {
         repeat(2) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         openAbout()
         repeat(3) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         openAbout()
         repeat(4) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         jump(2, 3)
         openAbout()
         repeat(4) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         jump(2, 1)
         openAbout()
         repeat(2) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         jump(3, 2)
         openAbout()
         repeat(3) { pressBackUnconditionally() }
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         jump(3, 1)
         openAbout()
@@ -195,14 +193,14 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         onView(withContentDescription(R.string.nav_app_bar_navigate_up_description))
             .perform(click())
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         repeat(2) {
             onView(withContentDescription(R.string.nav_app_bar_navigate_up_description))
@@ -211,7 +209,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         jump(2, 3)
         repeat(2) {
@@ -221,7 +219,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         jump(3, 2)
         onView(withContentDescription(R.string.nav_app_bar_navigate_up_description))
@@ -239,7 +237,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         openAbout()
         repeat(2) {
@@ -249,7 +247,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         openAbout()
         repeat(3) {
@@ -259,7 +257,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         jump(2, 3)
         openAbout()
@@ -270,7 +268,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         jump(3, 2)
         openAbout()
@@ -281,7 +279,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 2)
         jump(2, 1)
         openAbout()
@@ -290,7 +288,7 @@ class NavigationTest {
         pressBackUnconditionally()
         assertEquals(scenario.state, Lifecycle.State.DESTROYED)
 
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         jump(1, 3)
         jump(3, 1)
         openAbout()
@@ -435,7 +433,7 @@ class NavigationTest {
         onView(withId(R.id.bnToSecond)).check(matches(isDisplayed()))
 
         // check 2 fragment when open about and change screen orientation
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         onView(withId(R.id.activity_main)).check(matches(isDisplayed()))
         onView(withId(R.id.fragment1)).check(matches(isDisplayed()))
         onView(withId(R.id.bnToSecond)).check(matches(isDisplayed()))
@@ -459,7 +457,7 @@ class NavigationTest {
         onView(withId(R.id.bnToThird)).check(matches(isDisplayed()))
 
         // check 3 fragment when open about and change screen orientation
-        scenario = launchActivity<MainActivity>()
+        scenario = launchActivity()
         onView(withId(R.id.activity_main)).check(matches(isDisplayed()))
         onView(withId(R.id.fragment1)).check(matches(isDisplayed()))
         onView(withId(R.id.bnToSecond)).check(matches(isDisplayed()))
